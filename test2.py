@@ -3,7 +3,6 @@ import sqlite3
 conn = sqlite3.connect("magazin_db")
 cursor = conn.cursor()
 
-# Создание таблиц
 cursor.execute('''CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
@@ -29,7 +28,6 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS products (
     quantity INTEGER NOT NULL DEFAULT 0
 )''')
 
-# Классы для работы с данными
 class Users():
     def __init__(self, id, name, email, age):
         self.id = id
@@ -37,12 +35,10 @@ class Users():
         self.email = email
         self.age = age
 
-    # Добавление и изменение данных в таблицу users
     def save_to_db(self):
         cursor.execute("INSERT INTO users (id, name, email, age) VALUES (?, ?, ?, ?)", (self.id, self.name, self.email, self.age))
         conn.commit()
 
-    # Получение данных из таблицы users по id
     @classmethod
     def get_by_id(cls, id):
         cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
@@ -71,17 +67,14 @@ class Products:
         cursor.execute("INSERT INTO products (id, name, quantity) VALUES (?, ?, ?)", (self.id, self.name, self.quantity))
         conn.commit()
 
-# Дополнительные классы и функции для авторизации, регистрации, заказов и т.д.
 class Authentication:
     def login(self, email, password):
         cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
         user_data = cursor.fetchone()
         if user_data:
             print("Вход выполнен успешно")
-            # Здесь можно добавить код для сохранения информации о вошедшем пользователе и перехода к главному меню
         else:
             print("Неверный email или пароль")
-            # Здесь можно добавить код для перенаправления на страницу входа
             
 class CashiersAuthentication:
     def login(self, email, password):
@@ -89,10 +82,8 @@ class CashiersAuthentication:
         cashier_data = cursor.fetchone()
         if cashier_data:
             print("Вход выполнен успешно")
-            # Здесь можно добавить код для сохранения информации о вошедшем пользователе и перехода к главному меню
         else:
             print("Неверный email или пароль")
-            # Здесь можно добавить код для перенаправления на страницу входа
 
 class UsersRegistration:
     def register(self, name, email, age, password): 
@@ -100,12 +91,10 @@ class UsersRegistration:
         existing_user = cursor.fetchone()
         if existing_user:
             print("Пользователь с таким адресом электронной почты уже зарегистрирован")
-            # Здесь можно добавить код для перенаправления на страницу регистрации или вывода соответствующего сообщения
         else:
             cursor.execute("INSERT INTO users (name, email, age, password) VALUES (?, ?, ?, ?)", (name, email, age, password))
             conn.commit()
             print("Регистрация прошла успешно")
-            # Здесь можно добавить код для перехода на страницу входа или вывода подтверждения регистрации
 
 
 class Orders:
@@ -124,7 +113,6 @@ class Orders:
             print("У пользователя пока нет заказов")
 
 
-# Функция main для работы с программой через консоль
 def main():
     auth = Authentication()
     cash_auth = CashiersAuthentication()
